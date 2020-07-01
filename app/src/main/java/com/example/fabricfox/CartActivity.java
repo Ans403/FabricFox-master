@@ -34,7 +34,7 @@ public class CartActivity extends AppCompatActivity
     private RecyclerView.LayoutManager layoutManager;
     private Button NextProcessBtn;
     private TextView txtTotalAmount;
-
+    private int overallTotalPrice = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,6 +51,19 @@ public class CartActivity extends AppCompatActivity
 
         txtTotalAmount = (TextView) findViewById(R.id.total_price);
 
+
+        NextProcessBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                txtTotalAmount.setText( "Total Price = " + String.valueOf(overallTotalPrice));
+
+                Intent intent = new Intent(CartActivity.this, ConfirmFinalOrderActivity.class);
+                intent.putExtra("Total Price", String.valueOf(overallTotalPrice));
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -72,6 +85,9 @@ public class CartActivity extends AppCompatActivity
                 holder.txtProductName.setText("Name = " + model.getPname());
                 holder.txtProductPrice.setText("Price = " + model.getPrice() + "$");
                 holder.txtProductQuantity.setText("Quantity = " + model.getQuantity());
+
+                int oneTypeProdTPrice = (Integer.valueOf(model.getPrice())) * Integer.valueOf(model.getQuantity());
+                overallTotalPrice = overallTotalPrice + oneTypeProdTPrice;
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
